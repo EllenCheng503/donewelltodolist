@@ -1,10 +1,10 @@
 ## Screenshots
 
 ### Main Task View
-![Main Task View](./screenshots/main-task-view.png)
+![Main Task View](./main-task-view.png)
 
 ### Priority Matrix
-![Priority Matrix](./screenshots/priority-matrix.png)
+![Priority Matrix](./priority-matrix.png)
 
 # DoneWell To-Do List
 
