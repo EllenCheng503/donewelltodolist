@@ -1,11 +1,3 @@
-## Screenshots
-
-### Main Task View
-![Main Task View](./main-task-view.png)
-
-### Priority Matrix
-![Priority Matrix](./priority-matrix.png)
-
 # DoneWell To-Do List
 
 DoneWell To-Do List is a browser-based personal task manager designed to help users organize daily work with simple structure and visual priority planning.
