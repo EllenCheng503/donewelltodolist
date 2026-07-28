@@ -1,0 +1,186 @@
+{
+  "account": {
+    "handle": "@ellen_bizmarketinglab",
+    "display_name": "Ellen 商業行銷觀察室",
+    "source": "manual_screenshot_import",
+    "timezone": "Asia/Taipei",
+    "created_at": "2026-03-24",
+    "bio_topic": "商業行銷觀察、品牌策略拆解、行銷新手職涯洞察",
+    "previous_account_note": "前帳號 @ellen.bizmkt 因成長異常被 Meta 以 account integrity 理由停用，此為新帳號"
+  },
+  "data_completeness_note": "資料來源為使用者於 2026-05-07 提供的 Threads 介面截圖。指標為單次截圖快照，無時間序列。Insights 區間為 Apr 7 – May 6（30天）：Views 6,711、Followers 379。所有 sends/replies/likes 為截圖當下數值。",
+  "posts": [
+    {
+      "id": "ellen_post_001",
+      "title": "自我介紹",
+      "text": "我是 Ellen，做行銷 12 年了，從廣告業、汽車業輾轉來到科技業，現在在平台產業整天跟數字纏鬥。B2C 跟 B2B 都做過，全 funnel 都碰過。\n\n經歷過蠻兩極的狀況。做過只要煙火放得漂亮的千萬行銷廣宣，也扛過沒有預算但 ROAS 必須逼到極限的績效壓力。\n\n從品牌包裝到名單變現，行銷的坑大概都踩了一輪。\n\n最近常跟同業朋友聊到，現在工具太多變化太快，我自己也常急著想跟上，卻來不及看懂背後的策略邏輯。\n\n所以開了這個帳號當作我的觀察學習筆記，督促自己好好輸入也好好輸出。\n\n會聊商業行銷話題，也會聊職涯跟自我成長，一周兩更，希望能在這裡遇到更多志同道合的脆友一起交流:)\n\n#行銷 #品牌觀察 #行銷人日常",
+      "created_at": "2026-04-04T12:00:00+08:00",
+      "permalink": "https://www.threads.com/@ellen_bizmarketinglab",
+      "media_type": "TEXT",
+      "thread_part_count": 1,
+      "content_type": "introduction_identity",
+      "topic_tag": "行銷人",
+      "hashtags": ["#行銷", "#品牌觀察", "#行銷人日常"],
+      "hook_type": "identity_declaration",
+      "hook_text": "我是 Ellen，做行銷 12 年了",
+      "ending_type": "invitation_to_community",
+      "emotional_arc": "neutral_warm",
+      "word_count": 268,
+      "metrics": {
+        "views": 12500, "likes": 432, "replies": 65, "reposts": 1, "shares": 14,
+        "engagement_rate_likes": 0.0346, "engagement_rate_shares": 0.00112
+      },
+      "algorithm_signals": {
+        "discovery_surface": {"notes": "新帳號首篇，系統給予探索期加成"},
+        "topic_graph": {"topic_tag_value": "行銷人", "topic_match_clarity": "strong"},
+        "topic_freshness": {"semantic_cluster": "self_introduction", "freshness_score": "high", "fatigue_risk": "Low"}
+      },
+      "psychology_signals": {
+        "hook_payoff": {"hook_strength": "medium", "payoff_strength": "medium", "hook_payoff_gap": "aligned"},
+        "share_motive_split": {"dm_forwardability": "low", "identity_signal_strength": "high_for_marketers", "utility_share_strength": "low"},
+        "retellability": "medium"
+      },
+      "review_state": {
+        "calibration_notes": [
+          "12.5K views 是新帳號探索期+精準鉤子（12年資歷+全funnel）共同作用結果",
+          "engagement rate 3.46% 超過前帳號爆文標竿（1.11%）",
+          "65 留言代表受眾自我表達意願強"
+        ]
+      }
+    },
+    {
+      "id": "ellen_post_002",
+      "title": "Amazon 逆向工作法 / PR FAQ",
+      "text_part_1": "【如果新聞稿寫不出來，那這產品可能不夠好】\n\n讀亞馬遜逆向工作法，順便聊聊亞馬遜這件事。\n\n近期讀「亞馬遜逆向工作法」，舉到的一個方法，覺得很值得分享。\n\n亞馬遜有一個內部工具叫 PR/FAQ（新聞稿/常見問答）：在產品還沒開始做之前，團隊要先用 PR新聞稿+常見問答 的格式把這個產品的完成樣貌寫出來。",
+      "thread_part_count": 5,
+      "created_at": "2026-04-05T18:00:00+08:00",
+      "permalink": "https://www.threads.com/@ellen_bizmarketinglab",
+      "content_type": "framework_method_explanation",
+      "topic_tag": "行銷",
+      "hashtags": ["#行銷", "#產品開發", "#亞馬遜", "#公關", "#讀書筆記"],
+      "hook_type": "conditional_provocation",
+      "hook_text": "如果新聞稿寫不出來，那這產品可能不夠好",
+      "ending_type": "principle_distillation",
+      "emotional_arc": "curious_to_conviction",
+      "metrics": {
+        "views": 4200, "likes_part1": 124, "replies_part1": 6, "reposts_part1": 19, "shares_part1": 52,
+        "likes_subsequent_parts": [12, 3, 2, 3],
+        "engagement_rate_shares_part1": 0.0124,
+        "share_rate_note": "shares/views = 1.24% — 顯著高於同帳號其他貼文，是這個帳號目前最強的演算法信號"
+      },
+      "algorithm_signals": {
+        "discovery_surface": {"notes": "52 sends 是強信號讓系統願意給第二輪分發"},
+        "topic_graph": {"topic_tag_value": "行銷", "topic_match_clarity": "strong"},
+        "topic_freshness": {"semantic_cluster": "marketing_framework_explainer", "freshness_score": "high", "fatigue_risk": "Low"}
+      },
+      "psychology_signals": {
+        "hook_payoff": {"hook_strength": "high", "payoff_strength": "high", "hook_payoff_gap": "aligned",
+          "notes": "首句『新聞稿寫不出來=產品不夠好』是強反直覺斷言；後續完整解釋 PR FAQ 機制"},
+        "share_motive_split": {"dm_forwardability": "exceptional", "utility_share_strength": "exceptional"},
+        "retellability": "high"
+      },
+      "review_state": {
+        "calibration_notes": [
+          "52 sends 是這個帳號目前最強的演算法信號（Mosseri 公開：sends 權重為 likes 的 3-5 倍）",
+          "19 reposts 也是強信號，代表受眾願意公開背書",
+          "後續四串 likes 斷崖（124→12→3→2→3），5 串文已超出讀者耐心；下次同類框架文建議 3-4 串完結",
+          "『新聞稿寫不出來=產品不夠好』屬於 reframe 式 hook，是這個帳號的高潛力 hook 模式"
+        ]
+      }
+    },
+    {
+      "id": "ellen_post_003",
+      "title": "LOPIA事件觀察 / 企業領導人經營個人社群",
+      "text_part_1": "【LOPIA事件觀察 | 企業領導人該經營個人社群嗎？】\n\n最近很多人在討論這件事，分享一些我的觀察。\n\nLOPIA 台灣總經理水元仁志的 Threads 帳號應該很多人都看過了。",
+      "thread_part_count": 4,
+      "created_at": "2026-04-07T19:00:00+08:00",
+      "permalink": "https://www.threads.com/@ellen_bizmarketinglab",
+      "content_type": "case_observation_with_caveats",
+      "topic_tag": "LOPIA",
+      "hashtags": ["#品牌觀察", "#行銷", "#公關", "#社群經營", "#個人品牌"],
+      "hook_type": "current_event_anchor_with_question",
+      "hook_text": "LOPIA事件觀察 | 企業領導人該經營個人社群嗎",
+      "ending_type": "balanced_judgment",
+      "emotional_arc": "neutral_to_cautious",
+      "metrics": {
+        "views": 1700, "likes_part1": 17, "replies_part1": 7, "reposts_part1": 0, "shares_part1": 2,
+        "likes_subsequent_parts": [2, 2, 1]
+      },
+      "algorithm_signals": {
+        "topic_graph": {"topic_tag_value": "LOPIA", "notes": "topic tag 用單一品牌名可能限縮觸及"},
+        "topic_freshness": {"semantic_cluster": "brand_observation", "fatigue_risk": "Low"}
+      },
+      "psychology_signals": {
+        "hook_payoff": {"hook_strength": "medium", "notes": "問句型 hook 演算法上略弱於斷言式"},
+        "share_motive_split": {"utility_share_strength": "low", "notes": "缺乏可拿走的框架或一句話結論"}
+      },
+      "review_state": {
+        "calibration_notes": [
+          "topic tag 選 LOPIA（單一品牌名）讓系統把貼文推給 LOPIA 粉絲，但這群人不一定是行銷人",
+          "問句型 hook 演算法上比 reframe 式弱",
+          "0 reposts 代表沒有人覺得這個觀點值得公開背書"
+        ]
+      }
+    },
+    {
+      "id": "ellen_post_004",
+      "title": "皮克敏在台灣的在地化行銷觀察",
+      "text_part_1": "【皮克敏，如何在台灣變成全民運動】\n\n聊聊 Pikmin Bloom 的在地化行銷觀察 以及品牌可以從中學到什麼。",
+      "thread_part_count": 9,
+      "created_at": "2026-04-19T20:00:00+08:00",
+      "permalink": "https://www.threads.com/@ellen_bizmarketinglab",
+      "content_type": "case_breakdown_localization",
+      "topic_tag": "皮克敏",
+      "hashtags": ["#行銷", "#品牌觀察", "#PikminBloom", "#皮克敏", "#異業合作", "#在地化行銷"],
+      "hook_type": "title_with_phenomenon_framing",
+      "hook_text": "皮克敏，如何在台灣變成全民運動",
+      "ending_type": "actionable_principles_x3",
+      "emotional_arc": "observation_to_synthesis",
+      "metrics": {
+        "views": 560, "likes_part1": 9, "replies_part1": 13, "reposts_part1": 1, "shares_part1": 5,
+        "likes_subsequent_parts": [2, 1, 1, 1, 1, 1, 1, 1],
+        "replies_subsequent_parts": [1, 1, 2, 1, 1, 1, 1, 0],
+        "anomaly_note": "replies > likes（13 > 9），罕見比例"
+      },
+      "algorithm_signals": {
+        "topic_graph": {"topic_tag_value": "皮克敏", "notes": "把貼文推給遊戲玩家而非行銷人，topic graph 誤判"},
+        "topic_freshness": {"semantic_cluster": "brand_observation", "similar_recent_posts": 1, "days_since_last_similar_post": 12, "fatigue_risk": "Low"},
+        "originality_risk": {"hashtag_stuffing_risk": "medium", "notes": "用了 6 個 hashtag，可能稀釋系統對主題的判讀"}
+      },
+      "psychology_signals": {
+        "hook_payoff": {"notes": "9 串文兌現了完整拆解，但 9 串太長"},
+        "share_motive_split": {"utility_share_strength": "medium", "notes": "三個練習藏在第 8、9 串導致觸及不到"}
+      },
+      "review_state": {
+        "calibration_notes": [
+          "Views 560 比 post_003 又掉 67%，符合新帳號探索期收尾曲線",
+          "9 串文是過度切串，絵大多數讀者只看第一串",
+          "末段 #PikminBloom #皮克敏 把貼文推給遊戲玩家而非行銷人",
+          "replies > likes 罕見比例，可能因主題（遊戲）讓行銷人覺得不在自己領域、遊戲玩家又覺得太行銷"
+        ]
+      }
+    }
+  ],
+  "account_summary": {
+    "insights_period": "2026-04-07 to 2026-05-06",
+    "total_views_30d": 6711,
+    "followers_30d_end": 379,
+    "post_count_30d": 4,
+    "avg_posts_per_week": 0.93,
+    "trajectory": "12500 → 4200 → 1700 → 560",
+    "trajectory_diagnosis": "新帳號探索期加成 + 首篇精準命中目標受眾，後續每篇衰減約 60-70%。屬典型『首篇爆 + 探索期收尾』曲線，不能單獨歸因內容品質下降。",
+    "strongest_signal_to_date": {
+      "post_id": "ellen_post_002",
+      "metric": "shares = 52, share_rate = 1.24%",
+      "implication": "可立即套用於工作的『行銷框架/方法論』類內容，是這個帳號目前最被驗證的高擴散方向"
+    },
+    "weakest_pattern_to_date": {
+      "issue": "thread_part_count 過多（5、9 串）",
+      "recommendation": "下次串文建議控制在 3-4 串內，把『金句結論』前移到第 1-2 串"
+    }
+  },
+  "last_updated": "2026-05-07T12:00:00+08:00",
+  "tracker_version": "v1_directional_seed",
+  "data_confidence_level": "Directional",
+  "data_confidence_note": "目前僅 4 篇貼文，依 AK-Threads-Booster Data Confidence Rubric 屬 Directional 等級（< 5 篇）。所有 pattern 觀察為 one-off observation，非 statistical pattern。"
+}
