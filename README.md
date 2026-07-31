@@ -64,6 +64,23 @@ This is an early-stage open-source project under active improvement. Current pri
 - Add better export options
 - Prepare the project for outside contributors
 
+## Also in this repository
+
+### 學國字 ㄅㄆㄇ — Chinese learning tool for older adults (`learn/`)
+
+A separate single-file web tool designed for elderly learners of Traditional
+Chinese and Bopomofo (注音). It runs entirely in a mobile browser with no
+install and no account, and shares nothing with the to-do app above.
+
+- Picture flashcards with Traditional Chinese, 注音, and Taiwanese Mandarin speech
+- Listening and picture-matching quizzes with three large options per question
+- Full 注音 symbol chart, tone practice, and a 注音 matching quiz
+- Finger-tracing writing practice on a 米字格 grid
+- Large type, 72px minimum tap targets, adjustable font size and speech rate
+
+Open `learn/index.html` in a phone browser, or see `learn/README.md`
+for details in Traditional Chinese.
+
 ## Maintainer
 
 Maintained by Ellen Cheng.

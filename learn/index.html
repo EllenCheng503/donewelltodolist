@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F6F1E7">
+<meta name="description" content="長輩友善的台灣繁體中文與注音學習小工具，有圖卡、國語發音與寫字練習。">
+<title>學國字 ㄅㄆㄇ ・ 圖卡學習</title>
+<style>
+/* ============================================================
+   設計原則（長輩友善）
+   - 字大、對比高、按鈕大（最小高度 72px）
+   - 一次只做一件事，選項最多三個
+   - 不用滑動手勢、不用小圖示、返回鍵固定在左上角
+   ============================================================ */
+:root{
+  --scale: 1;
+  --bg: #F6F1E7;
+  --card: #FFFFFF;
+  --ink: #23201B;
+  --ink-soft: #5C554A;
+  --line: #DCD3C2;
+  --brand: #1F6F5C;
+  --brand-dark: #175647;
+  --warn: #C2410C;
+  --gold: #E9A319;
+  --ok: #1F7A3D;
+  --ok-bg: #E4F4E8;
+  --no: #B4322A;
+  --no-bg: #FBE7E5;
+  --radius: 18px;
+  --shadow: 0 4px 14px rgba(60,48,30,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{ -webkit-text-size-adjust:100%; }
+body{
+  font-family:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC","Apple LiGothic",sans-serif;
+  background:var(--bg); color:var(--ink);
+  font-size:calc(20px * var(--scale));
+  line-height:1.7;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer;}
+
+/* ---------- 版面 ---------- */
+.app{max-width:640px;margin:0 auto;min-height:100vh;}
+.topbar{
+  position:sticky;top:0;z-index:30;
+  background:var(--bg);
+  border-bottom:2px solid var(--line);
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;
+  padding-top:calc(10px + env(safe-area-inset-top));
+}
+.topbar h1{
+  font-size:calc(21px * var(--scale));font-weight:800;letter-spacing:.02em;
+  flex:1;text-align:center;
+}
+.btn-back{
+  min-width:96px;min-height:56px;
+  border:2px solid var(--line);border-radius:14px;background:var(--card);
+  font-size:calc(18px * var(--scale));font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-back:active{background:#EFE8DA;}
+.topbar .spacer{min-width:96px;}
+.screen{display:none;padding:18px 14px 60px;}
+.screen.on{display:block;}
+
+/* ---------- 通用元件 ---------- */
+.big-btn{
+  display:flex;align-items:center;gap:16px;width:100%;
+  min-height:96px;padding:16px 18px;margin-bottom:14px;
+  background:var(--card);border:3px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);text-align:left;
+}
+.big-btn:active{transform:scale(.985);background:#FDFAF3;}
+.big-btn .ico{font-size:calc(42px * var(--scale));line-height:1;flex:none;}
+.big-btn .tx b{display:block;font-size:calc(25px * var(--scale));font-weight:800;}
+.big-btn .tx span{display:block;font-size:calc(17px * var(--scale));color:var(--ink-soft);line-height:1.4;}
+
+.btn{
+  min-height:72px;padding:14px 20px;border-radius:16px;
+  font-size:calc(21px * var(--scale));font-weight:800;
+  border:3px solid transparent;display:inline-flex;align-items:center;
+  justify-content:center;gap:10px;width:100%;
+}
+.btn-main{background:var(--brand);color:#fff;}
+.btn-main:active{background:var(--brand-dark);}
+.btn-line{background:var(--card);border-color:var(--line);}
+.btn-line:active{background:#EFE8DA;}
+.btn-gold{background:var(--gold);color:#2B1D00;}
+.row{display:flex;gap:12px;}
+.row>*{flex:1;}
+.mt{margin-top:14px;}
+.hint{font-size:calc(17px * var(--scale));color:var(--ink-soft);margin:6px 2px 16px;line-height:1.6;}
+.sec-title{font-size:calc(20px * var(--scale));font-weight:800;margin:22px 2px 10px;}
+
+/* ---------- 主題選擇 ---------- */
+.topic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.topic{
+  background:var(--card);border:3px solid var(--line);border-radius:var(--radius);
+  padding:16px 8px;min-height:120px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  box-shadow:var(--shadow);
+}
+.topic:active{background:#FDFAF3;}
+.topic .ico{font-size:calc(40px * var(--scale));line-height:1;}
+.topic .nm{font-size:calc(21px * var(--scale));font-weight:800;}
+.topic .ct{font-size:calc(15px * var(--scale));color:var(--ink-soft);}
+
+/* ---------- 圖卡 ---------- */
+.card{
+  background:var(--card);border:3px solid var(--line);border-radius:22px;
+  box-shadow:var(--shadow);padding:20px 16px;text-align:center;
+}
+.card .pic{font-size:calc(110px * var(--scale));line-height:1.2;}
+.zhu-row{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
+.zhu-unit{display:flex;flex-direction:column;align-items:center;min-width:1.2em;}
+.zhu-unit .z{
+  font-size:calc(24px * var(--scale));color:var(--brand);font-weight:700;
+  letter-spacing:.04em;min-height:1.6em;
+}
+.zhu-unit .c{font-size:calc(76px * var(--scale));font-weight:700;line-height:1.15;}
+.counter{font-size:calc(17px * var(--scale));color:var(--ink-soft);text-align:center;margin-bottom:10px;}
+.bar{height:14px;background:#E7DFCE;border-radius:99px;overflow:hidden;margin-bottom:16px;}
+.bar>i{display:block;height:100%;background:var(--brand);border-radius:99px;transition:width .25s;}
+
+/* ---------- 測驗 ---------- */
+.q-prompt{
+  background:var(--card);border:3px solid var(--line);border-radius:22px;
+  box-shadow:var(--shadow);padding:18px 14px;text-align:center;margin-bottom:16px;
+}
+.q-prompt .big-pic{font-size:calc(96px * var(--scale));line-height:1.2;}
+.q-prompt .big-char{font-size:calc(80px * var(--scale));font-weight:700;line-height:1.2;}
+.q-prompt .big-zhu{font-size:calc(40px * var(--scale));font-weight:700;color:var(--brand);}
+.q-prompt .lab{font-size:calc(18px * var(--scale));color:var(--ink-soft);}
+.opt{
+  width:100%;min-height:110px;margin-bottom:14px;padding:12px 16px;
+  background:var(--card);border:3px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  display:flex;align-items:center;justify-content:center;gap:16px;
+}
+.opt .o-pic{font-size:calc(50px * var(--scale));line-height:1;}
+.opt .o-char{font-size:calc(48px * var(--scale));font-weight:700;}
+.opt .o-zhu{font-size:calc(34px * var(--scale));font-weight:700;color:var(--brand);letter-spacing:.04em;}
+.opt.good{background:var(--ok-bg);border-color:var(--ok);}
+.opt.bad{background:var(--no-bg);border-color:var(--no);}
+.opt:disabled{opacity:1;}
+.feedback{
+  text-align:center;font-size:calc(26px * var(--scale));font-weight:800;
+  min-height:2.2em;padding:8px;
+}
+.feedback.good{color:var(--ok);}
+.feedback.bad{color:var(--no);}
+
+/* ---------- 注音符號表 ---------- */
+.zh-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.zh-cell{
+  background:var(--card);border:3px solid var(--line);border-radius:14px;
+  padding:10px 4px;min-height:92px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+}
+.zh-cell:active{background:#EFE8DA;}
+.zh-cell .sym{font-size:calc(34px * var(--scale));font-weight:800;color:var(--brand);}
+.zh-cell .eg{font-size:calc(18px * var(--scale));color:var(--ink);font-weight:600;}
+.zh-cell.sel{background:#E8F2EE;border-color:var(--brand);}
+.tone-cell{
+  background:var(--card);border:3px solid var(--line);border-radius:14px;
+  padding:12px 6px;min-height:104px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+}
+.tone-cell .sym{font-size:calc(30px * var(--scale));font-weight:800;color:var(--warn);}
+.tone-cell .eg{font-size:calc(28px * var(--scale));font-weight:700;}
+.tone-cell .nm{font-size:calc(15px * var(--scale));color:var(--ink-soft);}
+
+/* ---------- 寫字練習 ---------- */
+.write-box{
+  position:relative;width:100%;max-width:420px;margin:0 auto;
+  aspect-ratio:1/1;background:var(--card);
+  border:3px solid var(--line);border-radius:16px;overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.grid-lines{position:absolute;inset:0;pointer-events:none;}
+.grid-lines::before,.grid-lines::after{
+  content:"";position:absolute;background:#E3D9C6;
+}
+.grid-lines::before{left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);}
+.grid-lines::after{top:50%;left:0;right:0;height:2px;transform:translateY(-50%);}
+.diag{position:absolute;inset:0;pointer-events:none;opacity:.75;}
+.guide-char{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:240px;line-height:1;color:#C9C0AF;
+  user-select:none;pointer-events:none;font-weight:500;
+}
+.guide-char.faint{color:#EAE3D6;}
+.guide-char.off{display:none;}
+#pad{position:absolute;inset:0;touch-action:none;width:100%;height:100%;}
+.char-picker{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
+.char-pick{
+  min-width:76px;min-height:76px;border:3px solid var(--line);border-radius:14px;
+  background:var(--card);font-size:calc(36px * var(--scale));font-weight:700;
+}
+.char-pick.sel{background:#E8F2EE;border-color:var(--brand);}
+
+/* ---------- 設定 / 紀錄 ---------- */
+.seg{display:flex;gap:10px;margin-bottom:20px;}
+.seg button{
+  flex:1;min-height:76px;border:3px solid var(--line);border-radius:14px;
+  background:var(--card);font-size:calc(19px * var(--scale));font-weight:800;
+}
+.seg button.sel{background:var(--brand);color:#fff;border-color:var(--brand);}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:8px;}
+.stat{
+  background:var(--card);border:3px solid var(--line);border-radius:16px;
+  padding:16px 10px;text-align:center;
+}
+.stat b{display:block;font-size:calc(38px * var(--scale));font-weight:800;color:var(--brand);line-height:1.2;}
+.stat span{font-size:calc(16px * var(--scale));color:var(--ink-soft);}
+.topic-progress{background:var(--card);border:3px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px;}
+.topic-progress .tp-head{display:flex;justify-content:space-between;font-size:calc(19px * var(--scale));font-weight:700;margin-bottom:8px;}
+.notice{
+  background:#FFF6E2;border:3px solid var(--gold);border-radius:16px;
+  padding:14px 16px;font-size:calc(17px * var(--scale));line-height:1.6;margin-bottom:16px;
+}
+.result-face{font-size:calc(90px * var(--scale));text-align:center;line-height:1.2;}
+.result-line{text-align:center;font-size:calc(26px * var(--scale));font-weight:800;margin-bottom:6px;}
+.stars{text-align:center;font-size:calc(40px * var(--scale));letter-spacing:.1em;margin-bottom:16px;}
+select{
+  width:100%;min-height:72px;font-size:calc(19px * var(--scale));font-family:inherit;
+  border:3px solid var(--line);border-radius:14px;background:var(--card);padding:0 14px;
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <button class="btn-back" id="backBtn" type="button">← 回上頁</button>
+    <h1 id="title">學國字</h1>
+    <div class="spacer"></div>
+  </header>
+
+  <!-- ========== 首頁 ========== -->
+  <section class="screen on" id="s-home">
+    <div class="notice" id="soundNotice">
+      要有聲音，請把手機音量調大、把靜音關掉。<br>
+      第一次按下按鈕之後才會開始說話，這是手機的規定。
+      <button class="btn btn-line mt" id="noticeOk" type="button" style="min-height:60px;font-size:calc(18px * var(--scale));">知道了，不用再提醒</button>
+    </div>
+
+    <button class="big-btn" data-go="pickTopic:learn" type="button">
+      <span class="ico">📖</span>
+      <span class="tx"><b>看圖學字</b><span>一張一張圖卡，看圖、看注音、聽發音</span></span>
+    </button>
+
+    <button class="big-btn" data-go="pickTopic:listen" type="button">
+      <span class="ico">🔊</span>
+      <span class="tx"><b>聽聲音選字</b><span>聽一個詞，從三個裡面選出正確的字</span></span>
+    </button>
+
+    <button class="big-btn" data-go="pickTopic:picture" type="button">
+      <span class="ico">🖼️</span>
+      <span class="tx"><b>看圖選字</b><span>看圖片，選出正確的國字</span></span>
+    </button>
+
+    <button class="big-btn" data-go="zhuyinHome" type="button">
+      <span class="ico">ㄅ</span>
+      <span class="tx"><b>ㄅㄆㄇ 注音練習</b><span>認符號、學四聲，再做注音配對</span></span>
+    </button>
+
+    <button class="big-btn" data-go="pickTopic:write" type="button">
+      <span class="ico">✍️</span>
+      <span class="tx"><b>寫字練習</b><span>用手指在格子裡描字，一筆一筆練</span></span>
+    </button>
+
+    <button class="big-btn" data-go="progress" type="button">
+      <span class="ico">⭐</span>
+      <span class="tx"><b>我的紀錄</b><span>看看今天練了多少、學會幾個字</span></span>
+    </button>
+
+    <button class="big-btn" data-go="settings" type="button">
+      <span class="ico">⚙️</span>
+      <span class="tx"><b>設定</b><span>字體大小、說話速度、聲音</span></span>
+    </button>
+  </section>
+
+  <!-- ========== 選主題 ========== -->
+  <section class="screen" id="s-topic">
+    <p class="hint" id="topicHint">請選一個想學的主題。</p>
+    <div class="topic-grid" id="topicGrid"></div>
+    <button class="btn btn-line mt" data-go="home" type="button">回首頁</button>
+  </section>
+
+  <!-- ========== 圖卡學習 ========== -->
+  <section class="screen" id="s-learn">
+    <p class="counter" id="learnCount"></p>
+    <div class="bar"><i id="learnBar"></i></div>
+
+    <div class="card">
+      <div class="pic" id="learnPic">🍚</div>
+      <div class="zhu-row" id="learnWord"></div>
+    </div>
+
+    <button class="btn btn-main mt" id="learnSpeak" type="button">🔊 再唸一次</button>
+    <div class="row mt">
+      <button class="btn btn-line" id="learnPrev" type="button">← 上一個</button>
+      <button class="btn btn-main" id="learnNext" type="button">下一個 →</button>
+    </div>
+    <button class="btn btn-line mt" id="learnWrite" type="button">✍️ 練習寫這個字</button>
+    <button class="btn btn-line mt" data-go="home" type="button">回首頁</button>
+  </section>
+
+  <!-- ========== 測驗（聽聲音／看圖／注音） ========== -->
+  <section class="screen" id="s-quiz">
+    <p class="counter" id="quizCount"></p>
+    <div class="bar"><i id="quizBar"></i></div>
+    <div class="q-prompt" id="quizPrompt"></div>
+    <div id="quizOptions"></div>
+    <p class="feedback" id="quizFeedback"></p>
+    <button class="btn btn-main" id="quizNext" type="button" style="display:none">下一題 →</button>
+    <button class="btn btn-line mt" data-go="home" type="button">結束，回首頁</button>
+  </section>
+
+  <!-- ========== 測驗結果 ========== -->
+  <section class="screen" id="s-result">
+    <div class="result-face" id="resultFace">😊</div>
+    <p class="result-line" id="resultLine"></p>
+    <div class="stars" id="resultStars"></div>
+    <button class="btn btn-main" id="againBtn" type="button">🔁 再玩一次</button>
+    <button class="btn btn-line mt" id="otherTopicBtn" type="button">換一個主題</button>
+    <button class="btn btn-line mt" data-go="home" type="button">回首頁</button>
+  </section>
+
+  <!-- ========== 注音首頁 ========== -->
+  <section class="screen" id="s-zhuyin">
+    <button class="big-btn" data-go="zhuyinTable" type="button">
+      <span class="ico">📋</span>
+      <span class="tx"><b>注音符號表</b><span>37 個符號，按一下就唸給你聽</span></span>
+    </button>
+    <button class="big-btn" data-go="tones" type="button">
+      <span class="ico">🎵</span>
+      <span class="tx"><b>四聲和輕聲</b><span>媽、麻、馬、罵，聽聽看差在哪</span></span>
+    </button>
+    <button class="big-btn" data-go="pickTopic:zhuyin" type="button">
+      <span class="ico">🧩</span>
+      <span class="tx"><b>注音配對</b><span>看國字，選出正確的注音</span></span>
+    </button>
+    <button class="btn btn-line mt" data-go="home" type="button">回首頁</button>
+  </section>
+
+  <!-- ========== 注音符號表 ========== -->
+  <section class="screen" id="s-zhtable">
+    <p class="hint">按一下符號，會唸出「例字」給你聽。<br>例如按 ㄅ，會唸「八」。</p>
+    <div class="card" id="zhDetail" style="margin-bottom:16px;">
+      <div class="pic" id="zhDetailSym" style="color:var(--brand);font-weight:800;">ㄅ</div>
+      <p style="font-size:calc(22px * var(--scale));color:var(--ink-soft);">例字</p>
+      <div class="zhu-row" id="zhDetailWord"></div>
+      <button class="btn btn-main mt" id="zhDetailSpeak" type="button">🔊 再唸一次</button>
+    </div>
+    <p class="sec-title">聲母（21個）</p>
+    <div class="zh-grid" id="zhInitials"></div>
+    <p class="sec-title">介音（3個）</p>
+    <div class="zh-grid" id="zhMedials"></div>
+    <p class="sec-title">韻母（13個）</p>
+    <div class="zh-grid" id="zhFinals"></div>
+    <button class="btn btn-line mt" data-go="home" type="button">回首頁</button>
+  </section>
+
+  <!-- ========== 四聲 ========== -->
+  <section class="screen" id="s-tones">
+    <p class="hint">同樣是「ㄇㄚ」，聲調不一樣，意思就完全不同。<br>按一下每一個聽聽看。</p>
+    <div class="zh-grid" style="grid-template-columns:repeat(2,1fr);" id="toneGrid"></div>
+    <button class="btn btn-line mt" data-go="zhuyinHome" type="button">回注音練習</button>
+    <button class="btn btn-line mt" data-go="home" type="button">回首頁</button>
+  </section>
+
+  <!-- ========== 寫字練習 ========== -->
+  <section class="screen" id="s-write">
+    <p class="counter" id="writeCount"></p>
+    <div class="char-picker" id="charPicker"></div>
+    <div class="write-box">
+      <div class="grid-lines"></div>
+      <svg class="diag" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="0" y1="0" x2="100" y2="100" stroke="#EDE5D5" stroke-width="0.6"/>
+        <line x1="100" y1="0" x2="0" y2="100" stroke="#EDE5D5" stroke-width="0.6"/>
+      </svg>
+      <div class="guide-char" id="guideChar">飯</div>
+      <canvas id="pad"></canvas>
+    </div>
+    <div class="row mt">
+      <button class="btn btn-line" id="writeClear" type="button">🧽 擦掉</button>
+      <button class="btn btn-line" id="writeGuide" type="button">👁️ 提示 深</button>
+    </div>
+    <button class="btn btn-main mt" id="writeSpeak" type="button">🔊 這個字怎麼唸</button>
+    <button class="btn btn-gold mt" id="writeDone" type="button">✅ 寫好了，下一個</button>
+    <button class="btn btn-line mt" data-go="home" type="button">回首頁</button>
+  </section>
+
+  <!-- ========== 我的紀錄 ========== -->
+  <section class="screen" id="s-progress">
+    <div class="stat-grid">
+      <div class="stat"><b id="stToday">0</b><span>今天練習題數</span></div>
+      <div class="stat"><b id="stDays">0</b><span>連續練習天數</span></div>
+      <div class="stat"><b id="stLearned">0</b><span>學會的字詞</span></div>
+      <div class="stat"><b id="stRate">0%</b><span>答對率</span></div>
+    </div>
+    <p class="sec-title">各主題進度</p>
+    <div id="topicProgress"></div>
+    <button class="btn btn-line mt" data-go="home" type="button">回首頁</button>
+    <button class="btn btn-line mt" id="resetBtn" type="button" style="color:var(--no);">清除全部紀錄</button>
+  </section>
+
+  <!-- ========== 設定 ========== -->
+  <section class="screen" id="s-settings">
+    <p class="sec-title">字體大小</p>
+    <div class="seg" id="segScale">
+      <button data-v="1" type="button">大</button>
+      <button data-v="1.15" type="button">更大</button>
+      <button data-v="1.3" type="button">最大</button>
+    </div>
+
+    <p class="sec-title">說話速度</p>
+    <div class="seg" id="segRate">
+      <button data-v="0.55" type="button">很慢</button>
+      <button data-v="0.75" type="button">慢</button>
+      <button data-v="0.95" type="button">普通</button>
+    </div>
+
+    <p class="sec-title">圖卡上顯示注音</p>
+    <div class="seg" id="segZhuyin">
+      <button data-v="1" type="button">顯示</button>
+      <button data-v="0" type="button">不顯示</button>
+    </div>
+
+    <p class="sec-title">聲音（國語發音）</p>
+    <p class="hint" id="voiceInfo">正在尋找可用的中文語音…</p>
+    <select id="voiceSelect" aria-label="選擇語音"></select>
+    <button class="btn btn-main mt" id="testVoice" type="button">🔊 試聽：您好，今天天氣很好</button>
+
+    <button class="btn btn-line mt" data-go="home" type="button">回首頁</button>
+  </section>
+
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   1. 資料：詞語（繁體字 + 台灣注音 + 圖卡）
+   注音採台灣教育部標準，輕聲以「˙」標在音節前。
+   abstract:true 的詞不進入「看圖選字」（圖片不夠具體）。
+   ============================================================ */
+const TOPICS = [
+  {id:'family', name:'家人',     icon:'👨‍👩‍👧'},
+  {id:'body',   name:'身體',     icon:'🧍'},
+  {id:'food',   name:'食物',     icon:'🍚'},
+  {id:'thing',  name:'日常用品', icon:'🔑'},
+  {id:'act',    name:'動作',     icon:'🚶'},
+  {id:'place',  name:'地方',     icon:'🏥'},
+  {id:'nature', name:'天氣自然', icon:'☀️'},
+  {id:'num',    name:'數字',     icon:'🔢'},
+  {id:'time',   name:'時間',     icon:'🕐'}
+];
+
+const WORDS = [
+  // 家人
+  {w:'爸爸', z:['ㄅㄚˋ','˙ㄅㄚ'],   p:'👨',   t:'family'},
+  {w:'媽媽', z:['ㄇㄚ','˙ㄇㄚ'],     p:'👩',   t:'family'},
+  {w:'哥哥', z:['ㄍㄜ','˙ㄍㄜ'],     p:'👦',   t:'family'},
+  {w:'姊姊', z:['ㄐㄧㄝˇ','˙ㄐㄧㄝ'],p:'👧',   t:'family'},
+  {w:'弟弟', z:['ㄉㄧˋ','˙ㄉㄧ'],   p:'🧒',   t:'family'},
+  {w:'妹妹', z:['ㄇㄟˋ','˙ㄇㄟ'],   p:'👶',   t:'family'},
+  {w:'爺爺', z:['ㄧㄝˊ','˙ㄧㄝ'],   p:'👴',   t:'family'},
+  {w:'奶奶', z:['ㄋㄞˇ','˙ㄋㄞ'],   p:'👵',   t:'family'},
+  {w:'家人', z:['ㄐㄧㄚ','ㄖㄣˊ'],  p:'👨‍👩‍👧‍👦', t:'family'},
+  {w:'朋友', z:['ㄆㄥˊ','ㄧㄡˇ'],   p:'🤝',   t:'family'},
+
+  // 身體
+  {w:'頭',   z:['ㄊㄡˊ'],           p:'👤',   t:'body'},
+  {w:'眼睛', z:['ㄧㄢˇ','˙ㄐㄧㄥ'], p:'👁️',  t:'body'},
+  {w:'鼻子', z:['ㄅㄧˊ','˙ㄗ'],     p:'👃',   t:'body'},
+  {w:'嘴巴', z:['ㄗㄨㄟˇ','ㄅㄚ'],  p:'👄',   t:'body'},
+  {w:'耳朵', z:['ㄦˇ','˙ㄉㄨㄛ'],   p:'👂',   t:'body'},
+  {w:'手',   z:['ㄕㄡˇ'],           p:'✋',   t:'body'},
+  {w:'腳',   z:['ㄐㄧㄠˇ'],         p:'🦶',   t:'body'},
+  {w:'頭髮', z:['ㄊㄡˊ','ㄈㄚˇ'],   p:'💇',   t:'body'},
+  {w:'牙齒', z:['ㄧㄚˊ','ㄔˇ'],     p:'🦷',   t:'body'},
+  {w:'心',   z:['ㄒㄧㄣ'],           p:'❤️',  t:'body'},
+
+  // 食物
+  {w:'飯',   z:['ㄈㄢˋ'],           p:'🍚',   t:'food'},
+  {w:'麵',   z:['ㄇㄧㄢˋ'],         p:'🍜',   t:'food'},
+  {w:'水',   z:['ㄕㄨㄟˇ'],         p:'💧',   t:'food'},
+  {w:'茶',   z:['ㄔㄚˊ'],           p:'🍵',   t:'food'},
+  {w:'蛋',   z:['ㄉㄢˋ'],           p:'🥚',   t:'food'},
+  {w:'魚',   z:['ㄩˊ'],             p:'🐟',   t:'food'},
+  {w:'肉',   z:['ㄖㄡˋ'],           p:'🍖',   t:'food'},
+  {w:'菜',   z:['ㄘㄞˋ'],           p:'🥬',   t:'food'},
+  {w:'湯',   z:['ㄊㄤ'],             p:'🍲',   t:'food'},
+  {w:'麵包', z:['ㄇㄧㄢˋ','ㄅㄠ'],  p:'🍞',   t:'food'},
+  {w:'牛奶', z:['ㄋㄧㄡˊ','ㄋㄞˇ'], p:'🥛',   t:'food'},
+  {w:'蘋果', z:['ㄆㄧㄥˊ','ㄍㄨㄛˇ'],p:'🍎',  t:'food'},
+  {w:'香蕉', z:['ㄒㄧㄤ','ㄐㄧㄠ'], p:'🍌',   t:'food'},
+  {w:'水果', z:['ㄕㄨㄟˇ','ㄍㄨㄛˇ'],p:'🍉',  t:'food'},
+
+  // 日常用品
+  {w:'門',   z:['ㄇㄣˊ'],           p:'🚪',   t:'thing'},
+  {w:'窗戶', z:['ㄔㄨㄤ','ㄏㄨˋ'],  p:'🪟',   t:'thing'},
+  {w:'桌子', z:['ㄓㄨㄛ','˙ㄗ'],    p:'🍽️',  t:'thing'},
+  {w:'椅子', z:['ㄧˇ','˙ㄗ'],       p:'🪑',   t:'thing'},
+  {w:'床',   z:['ㄔㄨㄤˊ'],         p:'🛏️',  t:'thing'},
+  {w:'電話', z:['ㄉㄧㄢˋ','ㄏㄨㄚˋ'],p:'☎️',  t:'thing'},
+  {w:'電視', z:['ㄉㄧㄢˋ','ㄕˋ'],   p:'📺',   t:'thing'},
+  {w:'手機', z:['ㄕㄡˇ','ㄐㄧ'],    p:'📱',   t:'thing'},
+  {w:'鑰匙', z:['ㄧㄠˋ','˙ㄕ'],     p:'🔑',   t:'thing'},
+  {w:'雨傘', z:['ㄩˇ','ㄙㄢˇ'],     p:'☂️',  t:'thing'},
+  {w:'錢',   z:['ㄑㄧㄢˊ'],         p:'💰',   t:'thing'},
+  {w:'藥',   z:['ㄧㄠˋ'],           p:'💊',   t:'thing'},
+
+  // 動作
+  {w:'吃',   z:['ㄔ'],               p:'😋',   t:'act'},
+  {w:'喝',   z:['ㄏㄜ'],             p:'🥤',   t:'act'},
+  {w:'走',   z:['ㄗㄡˇ'],           p:'🚶',   t:'act'},
+  {w:'坐',   z:['ㄗㄨㄛˋ'],         p:'💺',   t:'act'},
+  {w:'站',   z:['ㄓㄢˋ'],           p:'🧍',   t:'act'},
+  {w:'看',   z:['ㄎㄢˋ'],           p:'👀',   t:'act'},
+  {w:'聽',   z:['ㄊㄧㄥ'],           p:'🎧',   t:'act'},
+  {w:'說',   z:['ㄕㄨㄛ'],           p:'💬',   t:'act'},
+  {w:'寫',   z:['ㄒㄧㄝˇ'],         p:'✍️',  t:'act'},
+  {w:'買',   z:['ㄇㄞˇ'],           p:'🛒',   t:'act'},
+  {w:'睡覺', z:['ㄕㄨㄟˋ','ㄐㄧㄠˋ'],p:'😴',  t:'act'},
+  {w:'洗澡', z:['ㄒㄧˇ','ㄗㄠˇ'],   p:'🛁',   t:'act'},
+
+  // 地方
+  {w:'家',   z:['ㄐㄧㄚ'],           p:'🏠',   t:'place'},
+  {w:'醫院', z:['ㄧ','ㄩㄢˋ'],      p:'🏥',   t:'place'},
+  {w:'學校', z:['ㄒㄩㄝˊ','ㄒㄧㄠˋ'],p:'🏫',  t:'place'},
+  {w:'市場', z:['ㄕˋ','ㄔㄤˇ'],     p:'🏬',   t:'place'},
+  {w:'公園', z:['ㄍㄨㄥ','ㄩㄢˊ'],  p:'🏞️',  t:'place'},
+  {w:'車站', z:['ㄔㄜ','ㄓㄢˋ'],    p:'🚉',   t:'place'},
+  {w:'銀行', z:['ㄧㄣˊ','ㄏㄤˊ'],   p:'🏦',   t:'place'},
+  {w:'郵局', z:['ㄧㄡˊ','ㄐㄩˊ'],   p:'📮',   t:'place'},
+  {w:'餐廳', z:['ㄘㄢ','ㄊㄧㄥ'],    p:'🏮',   t:'place'},
+  {w:'廁所', z:['ㄘㄜˋ','ㄙㄨㄛˇ'], p:'🚻',   t:'place'},
+
+  // 天氣自然
+  {w:'太陽', z:['ㄊㄞˋ','ㄧㄤˊ'],   p:'☀️',  t:'nature'},
+  {w:'月亮', z:['ㄩㄝˋ','˙ㄌㄧㄤ'], p:'🌙',   t:'nature'},
+  {w:'星星', z:['ㄒㄧㄥ','˙ㄒㄧㄥ'],p:'⭐',   t:'nature'},
+  {w:'下雨', z:['ㄒㄧㄚˋ','ㄩˇ'],   p:'🌧️',  t:'nature'},
+  {w:'風',   z:['ㄈㄥ'],             p:'🌬️',  t:'nature'},
+  {w:'雲',   z:['ㄩㄣˊ'],           p:'☁️',  t:'nature'},
+  {w:'花',   z:['ㄏㄨㄚ'],           p:'🌸',   t:'nature'},
+  {w:'樹',   z:['ㄕㄨˋ'],           p:'🌳',   t:'nature'},
+  {w:'山',   z:['ㄕㄢ'],             p:'⛰️',  t:'nature'},
+  {w:'海',   z:['ㄏㄞˇ'],           p:'🌊',   t:'nature'},
+
+  // 數字
+  {w:'一',   z:['ㄧ'],               p:'1️⃣', t:'num'},
+  {w:'二',   z:['ㄦˋ'],             p:'2️⃣', t:'num'},
+  {w:'三',   z:['ㄙㄢ'],             p:'3️⃣', t:'num'},
+  {w:'四',   z:['ㄙˋ'],             p:'4️⃣', t:'num'},
+  {w:'五',   z:['ㄨˇ'],             p:'5️⃣', t:'num'},
+  {w:'六',   z:['ㄌㄧㄡˋ'],         p:'6️⃣', t:'num'},
+  {w:'七',   z:['ㄑㄧ'],             p:'7️⃣', t:'num'},
+  {w:'八',   z:['ㄅㄚ'],             p:'8️⃣', t:'num'},
+  {w:'九',   z:['ㄐㄧㄡˇ'],         p:'9️⃣', t:'num'},
+  {w:'十',   z:['ㄕˊ'],             p:'🔟',  t:'num'},
+
+  // 時間
+  {w:'今天', z:['ㄐㄧㄣ','ㄊㄧㄢ'], p:'📅',   t:'time', abstract:true},
+  {w:'明天', z:['ㄇㄧㄥˊ','ㄊㄧㄢ'],p:'➡️',  t:'time', abstract:true},
+  {w:'昨天', z:['ㄗㄨㄛˊ','ㄊㄧㄢ'],p:'⬅️',  t:'time', abstract:true},
+  {w:'星期', z:['ㄒㄧㄥ','ㄑㄧˊ'],  p:'🗓️',  t:'time', abstract:true},
+  {w:'現在', z:['ㄒㄧㄢˋ','ㄗㄞˋ'],p:'⏰',   t:'time', abstract:true},
+  {w:'時間', z:['ㄕˊ','ㄐㄧㄢ'],    p:'⌚',   t:'time', abstract:true},
+  {w:'早上', z:['ㄗㄠˇ','˙ㄕㄤ'],   p:'🌅',   t:'time'},
+  {w:'中午', z:['ㄓㄨㄥ','ㄨˇ'],    p:'🌞',   t:'time'},
+  {w:'晚上', z:['ㄨㄢˇ','˙ㄕㄤ'],   p:'🌃',   t:'time'},
+  {w:'生日', z:['ㄕㄥ','ㄖˋ'],      p:'🎂',   t:'time'}
+];
+
+/* 注音符號表：符號 + 例字 + 例字注音 */
+const INITIALS = [
+  ['ㄅ','八','ㄅㄚ'],['ㄆ','婆','ㄆㄛˊ'],['ㄇ','媽','ㄇㄚ'],['ㄈ','飯','ㄈㄢˋ'],
+  ['ㄉ','大','ㄉㄚˋ'],['ㄊ','湯','ㄊㄤ'],['ㄋ','牛','ㄋㄧㄡˊ'],['ㄌ','老','ㄌㄠˇ'],
+  ['ㄍ','哥','ㄍㄜ'],['ㄎ','看','ㄎㄢˋ'],['ㄏ','喝','ㄏㄜ'],
+  ['ㄐ','家','ㄐㄧㄚ'],['ㄑ','七','ㄑㄧ'],['ㄒ','洗','ㄒㄧˇ'],
+  ['ㄓ','站','ㄓㄢˋ'],['ㄔ','吃','ㄔ'],['ㄕ','手','ㄕㄡˇ'],['ㄖ','肉','ㄖㄡˋ'],
+  ['ㄗ','走','ㄗㄡˇ'],['ㄘ','菜','ㄘㄞˋ'],['ㄙ','傘','ㄙㄢˇ']
+];
+const MEDIALS = [ ['ㄧ','衣','ㄧ'], ['ㄨ','五','ㄨˇ'], ['ㄩ','魚','ㄩˊ'] ];
+const FINALS = [
+  ['ㄚ','啊','ㄚ'],['ㄛ','我','ㄨㄛˇ'],['ㄜ','餓','ㄜˋ'],['ㄝ','爺','ㄧㄝˊ'],
+  ['ㄞ','愛','ㄞˋ'],['ㄟ','飛','ㄈㄟ'],['ㄠ','貓','ㄇㄠ'],['ㄡ','頭','ㄊㄡˊ'],
+  ['ㄢ','安','ㄢ'],['ㄣ','門','ㄇㄣˊ'],['ㄤ','糖','ㄊㄤˊ'],['ㄥ','燈','ㄉㄥ'],
+  ['ㄦ','兒','ㄦˊ']
+];
+const TONES = [
+  ['（不標）','媽','ㄇㄚ','第一聲・高高平平'],
+  ['ˊ','麻','ㄇㄚˊ','第二聲・往上揚'],
+  ['ˇ','馬','ㄇㄚˇ','第三聲・先降再上'],
+  ['ˋ','罵','ㄇㄚˋ','第四聲・往下重'],
+  ['˙','嗎','˙ㄇㄚ','輕聲・輕輕短短']
+];
+
+/* ============================================================
+   2. 設定與進度（存在手機瀏覽器裡）
+   ============================================================ */
+const KEY = 'twlearn.v1';
+const DEFAULTS = {
+  scale: 1.15, rate: 0.75, showZhuyin: 1, voiceURI: '', hideNotice: 0,
+  stats: { correct:0, wrong:0, byWord:{}, byTopic:{}, lastDay:'', streak:0, todayCount:0 }
+};
+let S = load();
+
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(!raw) return JSON.parse(JSON.stringify(DEFAULTS));
+    const o = JSON.parse(raw);
+    const merged = Object.assign(JSON.parse(JSON.stringify(DEFAULTS)), o);
+    merged.stats = Object.assign(JSON.parse(JSON.stringify(DEFAULTS.stats)), o.stats || {});
+    return merged;
+  }catch(e){ return JSON.parse(JSON.stringify(DEFAULTS)); }
+}
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+}
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+function touchDay(){
+  const t = todayStr(), st = S.stats;
+  if(st.lastDay !== t){
+    const y = new Date(); y.setDate(y.getDate()-1);
+    const yStr = y.getFullYear()+'-'+(y.getMonth()+1)+'-'+y.getDate();
+    st.streak = (st.lastDay === yStr) ? (st.streak||0)+1 : 1;
+    st.lastDay = t;
+    st.todayCount = 0;
+    save();
+  }
+}
+touchDay();
+
+/* ============================================================
+   3. 語音（台灣國語）
+   ============================================================ */
+const TTS = {
+  voices: [], voice: null, ready:false,
+  init(){
+    if(!('speechSynthesis' in window)) return;
+    const pick = () => {
+      const all = speechSynthesis.getVoices() || [];
+      this.voices = all.filter(v => /^zh/i.test(v.lang));
+      if(!this.voices.length) this.voices = all;
+      this.voice = this.choose();
+      this.ready = true;
+      renderVoiceUI();
+    };
+    pick();
+    speechSynthesis.addEventListener('voiceschanged', pick);
+    setTimeout(pick, 800);
+  },
+  choose(){
+    const v = this.voices;
+    if(!v.length) return null;
+    if(S.voiceURI){
+      const saved = v.find(x => x.voiceURI === S.voiceURI);
+      if(saved) return saved;
+    }
+    const rank = (x) => {
+      const l = (x.lang || '').toLowerCase().replace('_','-');
+      if(l.startsWith('zh-tw') || l.includes('hant')) return 0;
+      if(l.startsWith('zh-hk')) return 1;
+      if(l.startsWith('zh-cn') || l.startsWith('zh-hans')) return 2;
+      if(l.startsWith('zh')) return 3;
+      return 9;
+    };
+    return v.slice().sort((a,b) => rank(a)-rank(b))[0];
+  },
+  speak(text, rate){
+    if(!('speechSynthesis' in window) || !text) return;
+    try{
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = (this.voice && this.voice.lang) ? this.voice.lang : 'zh-TW';
+      if(this.voice) u.voice = this.voice;
+      u.rate = rate || S.rate;
+      u.pitch = 1;
+      u.volume = 1;
+      // iOS Safari 在 cancel() 之後馬上 speak() 會沒有聲音，隔一下再唸
+      clearTimeout(this._t);
+      this._t = setTimeout(() => {
+        try{ speechSynthesis.speak(u); }catch(e){}
+      }, 80);
+    }catch(e){}
+  }
+};
+TTS.init();
+function say(t, r){ TTS.speak(t, r); }
+
+/* 提示音（答對／答錯），不依賴語音包 */
+let AC = null;
+function beep(ok){
+  try{
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    if(AC.state === 'suspended') AC.resume();
+    const notes = ok ? [660, 880] : [280];
+    notes.forEach((f,i) => {
+      const o = AC.createOscillator(), g = AC.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      const t0 = AC.currentTime + i*0.13;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.22, t0+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0+0.22);
+      o.connect(g); g.connect(AC.destination);
+      o.start(t0); o.stop(t0+0.25);
+    });
+  }catch(e){}
+}
+
+/* 第一次觸碰時解鎖手機音訊。
+   注意：這裡絕對不能改動版面，否則按下與放開之間畫面會位移，
+   長輩的第一次點擊就會落空。 */
+let audioUnlocked = false;
+function unlockAudio(){
+  if(audioUnlocked) return;
+  audioUnlocked = true;
+  try{
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    if(AC.state === 'suspended') AC.resume();
+  }catch(e){}
+  try{
+    if('speechSynthesis' in window){
+      const u = new SpeechSynthesisUtterance(' ');
+      u.volume = 0; speechSynthesis.speak(u);
+    }
+  }catch(e){}
+}
+document.addEventListener('pointerdown', unlockAudio, {once:true});
+
+/* ============================================================
+   4. 畫面切換
+   ============================================================ */
+const SCREENS = {
+  home:      {el:'s-home',     title:'學國字'},
+  topic:     {el:'s-topic',    title:'選主題'},
+  learn:     {el:'s-learn',    title:'看圖學字'},
+  quiz:      {el:'s-quiz',     title:'練習'},
+  result:    {el:'s-result',   title:'練習結果'},
+  zhuyin:    {el:'s-zhuyin',   title:'ㄅㄆㄇ 注音'},
+  zhtable:   {el:'s-zhtable',  title:'注音符號表'},
+  tones:     {el:'s-tones',    title:'四聲和輕聲'},
+  write:     {el:'s-write',    title:'寫字練習'},
+  progress:  {el:'s-progress', title:'我的紀錄'},
+  settings:  {el:'s-settings', title:'設定'}
+};
+let stack = ['home'];
+
+function show(name){
+  Object.values(SCREENS).forEach(s => document.getElementById(s.el).classList.remove('on'));
+  document.getElementById(SCREENS[name].el).classList.add('on');
+  document.getElementById('title').textContent = SCREENS[name].title;
+  document.getElementById('backBtn').style.visibility = (name === 'home') ? 'hidden' : 'visible';
+  window.scrollTo(0,0);
+}
+function go(name){
+  if(stack[stack.length-1] !== name) stack.push(name);
+  show(name);
+}
+function back(){
+  try{ speechSynthesis.cancel(); }catch(e){}
+  if(stack.length > 1) stack.pop();
+  show(stack[stack.length-1]);
+  if(stack[stack.length-1] === 'progress') renderProgress();
+}
+document.getElementById('backBtn').addEventListener('click', back);
+
+/* 首頁與各處的導覽按鈕 */
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-go]');
+  if(!b) return;
+  const [act, arg] = b.dataset.go.split(':');
+  if(act === 'home'){ stack = ['home']; show('home'); return; }
+  if(act === 'pickTopic'){ openTopicPicker(arg); return; }
+  if(act === 'zhuyinHome'){ go('zhuyin'); return; }
+  if(act === 'zhuyinTable'){ buildZhuyinTable(); go('zhtable'); return; }
+  if(act === 'tones'){ buildTones(); go('tones'); return; }
+  if(act === 'progress'){ renderProgress(); go('progress'); return; }
+  if(act === 'settings'){ renderSettings(); go('settings'); return; }
+});
+
+/* ============================================================
+   5. 選主題
+   ============================================================ */
+let mode = 'learn';       // learn | listen | picture | zhuyin | write
+let currentTopic = 'all';
+
+const MODE_HINT = {
+  learn:   '想學哪一類的字？按一下就開始看圖卡。',
+  listen:  '會唸一個詞，請從三個字裡面選出正確的。先選主題：',
+  picture: '看圖片選國字。先選主題：',
+  zhuyin:  '看國字選注音。先選主題：',
+  write:   '用手指描字練習。先選主題：'
+};
+const MODE_TITLE = {
+  learn:'看圖學字', listen:'聽聲音選字', picture:'看圖選字',
+  zhuyin:'注音配對', write:'寫字練習'
+};
+
+function wordsOf(topic, forPicture){
+  let list = (topic === 'all') ? WORDS.slice() : WORDS.filter(w => w.t === topic);
+  if(forPicture) list = list.filter(w => !w.abstract);
+  return list;
+}
+
+function openTopicPicker(m){
+  mode = m;
+  document.getElementById('topicHint').textContent = MODE_HINT[m] || '請選一個主題。';
+  SCREENS.topic.title = MODE_TITLE[m] || '選主題';
+  const grid = document.getElementById('topicGrid');
+  grid.innerHTML = '';
+
+  const mk = (id, icon, name, count) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'topic';
+    b.innerHTML = '<span class="ico">'+icon+'</span><span class="nm">'+name+'</span><span class="ct">'+count+' 個字詞</span>';
+    b.addEventListener('click', () => startMode(id));
+    grid.appendChild(b);
+  };
+
+  TOPICS.forEach(t => {
+    const n = wordsOf(t.id, mode === 'picture').length;
+    if(n >= 3) mk(t.id, t.icon, t.name, n);
+  });
+  mk('all', '🌈', '全部', wordsOf('all', mode === 'picture').length);
+  go('topic');
+}
+
+function startMode(topic){
+  currentTopic = topic;
+  if(mode === 'learn'){ startLearn(topic); }
+  else if(mode === 'write'){ startWrite(topic); }
+  else { startQuiz(topic, mode); }
+}
+
+/* ============================================================
+   6. 圖卡學習
+   ============================================================ */
+let learnList = [], learnIdx = 0;
+
+function zhuyinRow(word, showZ){
+  const chars = Array.from(word.w);
+  return chars.map((c,i) =>
+    '<span class="zhu-unit">'+
+      '<span class="z">'+(showZ ? (word.z[i] || '') : '')+'</span>'+
+      '<span class="c">'+c+'</span>'+
+    '</span>'
+  ).join('');
+}
+
+function startLearn(topic){
+  learnList = wordsOf(topic, false);
+  learnIdx = 0;
+  SCREENS.learn.title = '看圖學字';
+  go('learn');
+  renderLearn(true);
+}
+function renderLearn(speakIt){
+  const w = learnList[learnIdx];
+  if(!w) return;
+  document.getElementById('learnPic').textContent = w.p;
+  document.getElementById('learnWord').innerHTML = zhuyinRow(w, S.showZhuyin === 1 || S.showZhuyin === '1');
+  document.getElementById('learnCount').textContent = (learnIdx+1)+' / '+learnList.length;
+  document.getElementById('learnBar').style.width = ((learnIdx+1)/learnList.length*100)+'%';
+  document.getElementById('learnPrev').disabled = (learnIdx === 0);
+  document.getElementById('learnPrev').style.opacity = (learnIdx === 0) ? .45 : 1;
+  markSeen(w);
+  if(speakIt) say(w.w);
+}
+document.getElementById('learnSpeak').addEventListener('click', () => say(learnList[learnIdx].w));
+document.getElementById('learnPrev').addEventListener('click', () => {
+  if(learnIdx > 0){ learnIdx--; renderLearn(true); }
+});
+document.getElementById('learnNext').addEventListener('click', () => {
+  if(learnIdx < learnList.length-1){ learnIdx++; renderLearn(true); }
+  else { say('這一組看完了，很棒！'); learnIdx = 0; renderLearn(false); }
+});
+document.getElementById('learnWrite').addEventListener('click', () => {
+  writeList = [learnList[learnIdx]];
+  writeIdx = 0;
+  SCREENS.write.title = '寫字練習';
+  go('write');
+  renderWrite();
+});
+
+function markSeen(w){
+  const st = S.stats;
+  st.byWord[w.w] = st.byWord[w.w] || {seen:0, ok:0};
+  st.byWord[w.w].seen++;
+  save();
+}
+
+/* ============================================================
+   7. 測驗（聽聲音選字 / 看圖選字 / 注音配對）
+   ============================================================ */
+const ROUND = 10;
+let quizList = [], quizIdx = 0, quizRight = 0, quizWrong = 0, quizAnswered = false, quizAnswer = null;
+
+function shuffle(a){
+  const x = a.slice();
+  for(let i = x.length-1; i > 0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [x[i], x[j]] = [x[j], x[i]];
+  }
+  return x;
+}
+
+function startQuiz(topic, m){
+  const pool = wordsOf(topic, m === 'picture');
+  quizList = shuffle(pool).slice(0, Math.min(ROUND, pool.length));
+  quizIdx = 0; quizRight = 0; quizWrong = 0;
+  SCREENS.quiz.title = MODE_TITLE[m];
+  go('quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  quizAnswered = false;
+  const w = quizList[quizIdx];
+  quizAnswer = w;
+  const pool = wordsOf(currentTopic, mode === 'picture').filter(x => x.w !== w.w);
+  const distractors = shuffle(pool).slice(0, 2);
+  const options = shuffle([w].concat(distractors));
+
+  document.getElementById('quizCount').textContent = '第 '+(quizIdx+1)+' 題 / 共 '+quizList.length+' 題';
+  document.getElementById('quizBar').style.width = (quizIdx/quizList.length*100)+'%';
+  document.getElementById('quizFeedback').textContent = '';
+  document.getElementById('quizFeedback').className = 'feedback';
+  document.getElementById('quizNext').style.display = 'none';
+
+  const prompt = document.getElementById('quizPrompt');
+  if(mode === 'listen'){
+    prompt.innerHTML = '<p class="lab">請聽，然後選出正確的字</p><div class="big-pic">🔊</div>'+
+      '<button class="btn btn-main" id="replay" type="button">再唸一次</button>';
+    document.getElementById('replay').addEventListener('click', () => say(w.w));
+    setTimeout(() => say(w.w), 350);
+  }else if(mode === 'picture'){
+    prompt.innerHTML = '<p class="lab">這張圖是什麼？</p><div class="big-pic">'+w.p+'</div>';
+  }else{ // zhuyin
+    prompt.innerHTML = '<p class="lab">這個字的注音是哪一個？</p><div class="big-char">'+w.w+'</div>';
+    setTimeout(() => say(w.w), 350);
+  }
+
+  const box = document.getElementById('quizOptions');
+  box.innerHTML = '';
+  options.forEach(o => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'opt';
+    if(mode === 'zhuyin'){
+      b.innerHTML = '<span class="o-zhu">'+o.z.join(' ')+'</span>';
+    }else if(mode === 'listen'){
+      b.innerHTML = '<span class="o-char">'+o.w+'</span>';
+    }else{
+      b.innerHTML = '<span class="o-char">'+o.w+'</span>';
+    }
+    b.addEventListener('click', () => answer(b, o, w));
+    box.appendChild(b);
+  });
+}
+
+function answer(btn, chosen, correct){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const buttons = Array.from(document.getElementById('quizOptions').children);
+  buttons.forEach(x => x.disabled = true);
+
+  const fb = document.getElementById('quizFeedback');
+  const st = S.stats;
+  st.byWord[correct.w] = st.byWord[correct.w] || {seen:0, ok:0};
+  st.byTopic[correct.t] = st.byTopic[correct.t] || {ok:0, n:0};
+  st.byTopic[correct.t].n++;
+  st.todayCount = (st.todayCount||0) + 1;
+
+  if(chosen.w === correct.w){
+    quizRight++; st.correct++; st.byWord[correct.w].ok++; st.byTopic[correct.t].ok++;
+    btn.classList.add('good');
+    fb.innerHTML = '答對了！很棒 👏<br><b>'+correct.w+'</b>（'+correct.z.join(' ')+'）';
+    fb.className = 'feedback good';
+    beep(true);
+    setTimeout(() => say(correct.w + '，答對了'), 300);
+  }else{
+    quizWrong++; st.wrong++;
+    btn.classList.add('bad');
+    buttons.forEach(x => {
+      const t = x.textContent.replace(/\s/g,'');
+      const want = (mode === 'zhuyin') ? correct.z.join('').replace(/\s/g,'') : correct.w;
+      if(t === want) x.classList.add('good');
+    });
+    fb.innerHTML = '沒關係，正確答案是 <b>'+correct.w+'</b>（'+correct.z.join(' ')+'）';
+    fb.className = 'feedback bad';
+    beep(false);
+    setTimeout(() => say('正確答案是' + correct.w), 300);
+  }
+  save();
+  document.getElementById('quizNext').style.display = '';
+}
+
+document.getElementById('quizNext').addEventListener('click', () => {
+  quizIdx++;
+  if(quizIdx >= quizList.length) showResult();
+  else renderQuestion();
+});
+
+function showResult(){
+  const total = quizList.length;
+  const pct = Math.round(quizRight/total*100);
+  const stars = pct >= 90 ? 5 : pct >= 75 ? 4 : pct >= 60 ? 3 : pct >= 40 ? 2 : 1;
+  document.getElementById('resultFace').textContent = pct >= 75 ? '🎉' : pct >= 50 ? '😊' : '💪';
+  document.getElementById('resultLine').textContent = '答對 '+quizRight+' 題／共 '+total+' 題';
+  document.getElementById('resultStars').textContent = '⭐'.repeat(stars) + '☆'.repeat(5-stars);
+  go('result');
+  const msg = pct >= 75 ? '好厲害，答對'+quizRight+'題' :
+              pct >= 50 ? '不錯喔，答對'+quizRight+'題，再練一次會更好' :
+                          '沒關係，慢慢來，我們再練一次';
+  setTimeout(() => say(msg), 400);
+}
+document.getElementById('againBtn').addEventListener('click', () => startQuiz(currentTopic, mode));
+document.getElementById('otherTopicBtn').addEventListener('click', () => openTopicPicker(mode));
+
+/* ============================================================
+   8. 注音符號表 / 四聲
+   ============================================================ */
+let zhCurrent = INITIALS[0];
+
+function buildZhuyinTable(){
+  const fill = (id, arr) => {
+    const box = document.getElementById(id);
+    box.innerHTML = '';
+    arr.forEach(item => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'zh-cell';
+      b.innerHTML = '<span class="sym">'+item[0]+'</span><span class="eg">'+item[1]+'</span>';
+      b.addEventListener('click', () => selectZh(item));
+      box.appendChild(b);
+    });
+  };
+  fill('zhInitials', INITIALS);
+  fill('zhMedials', MEDIALS);
+  fill('zhFinals', FINALS);
+  selectZh(zhCurrent, true);
+}
+function selectZh(item, silent){
+  zhCurrent = item;
+  document.getElementById('zhDetailSym').textContent = item[0];
+  document.getElementById('zhDetailWord').innerHTML =
+    '<span class="zhu-unit"><span class="z">'+item[2]+'</span><span class="c">'+item[1]+'</span></span>';
+  document.querySelectorAll('.zh-cell').forEach(c => {
+    c.classList.toggle('sel', c.querySelector('.sym').textContent === item[0]);
+  });
+  if(!silent) say(item[1]);
+}
+document.getElementById('zhDetailSpeak').addEventListener('click', () => say(zhCurrent[1]));
+
+function buildTones(){
+  const box = document.getElementById('toneGrid');
+  box.innerHTML = '';
+  TONES.forEach(t => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'tone-cell';
+    b.innerHTML = '<span class="sym">'+t[0]+'</span><span class="eg">'+t[1]+'</span>'+
+                  '<span class="sym" style="font-size:calc(20px * var(--scale));color:var(--brand)">'+t[2]+'</span>'+
+                  '<span class="nm">'+t[3]+'</span>';
+    b.addEventListener('click', () => say(t[1], Math.min(S.rate, 0.6)));
+    box.appendChild(b);
+  });
+}
+
+/* ============================================================
+   9. 寫字練習（米字格描紅）
+   ============================================================ */
+let writeList = [], writeIdx = 0, writeChar = 0, guideLevel = 0; // 0深 1淡 2無
+const pad = document.getElementById('pad');
+const ctx = pad.getContext('2d');
+let drawing = false;
+
+function sizePad(){
+  const r = pad.getBoundingClientRect();
+  if(!r.width) return;
+  const dpr = window.devicePixelRatio || 1;
+  const img = pad.width ? ctx.getImageData(0,0,pad.width,pad.height) : null;
+  pad.width = Math.round(r.width * dpr);
+  pad.height = Math.round(r.height * dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#1A1712';
+  ctx.lineWidth = Math.max(10, r.width * 0.035);
+  if(img){ try{ ctx.putImageData(img,0,0); }catch(e){} }
+  // 描紅字留一點邊，不要頂到格線外框
+  document.getElementById('guideChar').style.fontSize = Math.round(r.width * 0.76) + 'px';
+}
+window.addEventListener('resize', () => { if(document.getElementById('s-write').classList.contains('on')) sizePad(); });
+
+function padPoint(e){
+  const r = pad.getBoundingClientRect();
+  return {x: e.clientX - r.left, y: e.clientY - r.top};
+}
+pad.addEventListener('pointerdown', (e) => {
+  e.preventDefault();
+  drawing = true;
+  pad.setPointerCapture(e.pointerId);
+  const p = padPoint(e);
+  ctx.beginPath(); ctx.moveTo(p.x, p.y);
+  ctx.lineTo(p.x+0.1, p.y+0.1); ctx.stroke();
+});
+pad.addEventListener('pointermove', (e) => {
+  if(!drawing) return;
+  e.preventDefault();
+  const p = padPoint(e);
+  ctx.lineTo(p.x, p.y); ctx.stroke();
+});
+['pointerup','pointercancel','pointerleave'].forEach(ev =>
+  pad.addEventListener(ev, () => { drawing = false; })
+);
+
+function clearPad(){ ctx.clearRect(0,0,pad.width,pad.height); }
+
+function startWrite(topic){
+  writeList = shuffle(wordsOf(topic, false));
+  writeIdx = 0; writeChar = 0;
+  SCREENS.write.title = '寫字練習';
+  go('write');
+  renderWrite();
+}
+function renderWrite(){
+  const w = writeList[writeIdx];
+  if(!w) return;
+  const chars = Array.from(w.w);
+  if(writeChar >= chars.length) writeChar = 0;
+
+  document.getElementById('writeCount').textContent =
+    w.w + '（' + w.z.join(' ') + '）　' + (writeIdx+1) + ' / ' + writeList.length;
+
+  const picker = document.getElementById('charPicker');
+  picker.innerHTML = '';
+  chars.forEach((c,i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'char-pick' + (i === writeChar ? ' sel' : '');
+    b.textContent = c;
+    b.addEventListener('click', () => { writeChar = i; renderWrite(); say(c); });
+    picker.appendChild(b);
+  });
+
+  const g = document.getElementById('guideChar');
+  g.textContent = chars[writeChar];
+  g.className = 'guide-char' + (guideLevel === 1 ? ' faint' : guideLevel === 2 ? ' off' : '');
+  clearPad();
+  requestAnimationFrame(sizePad);
+}
+document.getElementById('writeClear').addEventListener('click', clearPad);
+document.getElementById('writeGuide').addEventListener('click', () => {
+  guideLevel = (guideLevel+1) % 3;
+  document.getElementById('writeGuide').textContent =
+    '👁️ 提示 ' + ['深','淡','無'][guideLevel];
+  const g = document.getElementById('guideChar');
+  g.className = 'guide-char' + (guideLevel === 1 ? ' faint' : guideLevel === 2 ? ' off' : '');
+});
+document.getElementById('writeSpeak').addEventListener('click', () => {
+  const w = writeList[writeIdx];
+  const c = Array.from(w.w)[writeChar];
+  say(c + '，' + w.w);
+});
+document.getElementById('writeDone').addEventListener('click', () => {
+  const w = writeList[writeIdx];
+  const chars = Array.from(w.w);
+  S.stats.todayCount = (S.stats.todayCount||0) + 1;
+  S.stats.byWord[w.w] = S.stats.byWord[w.w] || {seen:0, ok:0};
+  S.stats.byWord[w.w].seen++;
+  save();
+  if(writeChar < chars.length-1){ writeChar++; }
+  else {
+    writeChar = 0;
+    writeIdx = (writeIdx+1) % writeList.length;
+    say('很好，換下一個字');
+  }
+  renderWrite();
+});
+
+/* ============================================================
+   10. 我的紀錄
+   ============================================================ */
+function renderProgress(){
+  touchDay();
+  const st = S.stats;
+  const learned = Object.keys(st.byWord).filter(k => (st.byWord[k].ok||0) >= 2).length;
+  const total = st.correct + st.wrong;
+  document.getElementById('stToday').textContent = st.todayCount || 0;
+  document.getElementById('stDays').textContent = st.streak || 0;
+  document.getElementById('stLearned').textContent = learned;
+  document.getElementById('stRate').textContent = total ? Math.round(st.correct/total*100)+'%' : '—';
+
+  const box = document.getElementById('topicProgress');
+  box.innerHTML = '';
+  TOPICS.forEach(t => {
+    const words = wordsOf(t.id, false);
+    const done = words.filter(w => (st.byWord[w.w] && st.byWord[w.w].ok >= 2)).length;
+    const pct = Math.round(done/words.length*100);
+    const d = document.createElement('div');
+    d.className = 'topic-progress';
+    d.innerHTML = '<div class="tp-head"><span>'+t.icon+' '+t.name+'</span><span>'+done+' / '+words.length+'</span></div>'+
+                  '<div class="bar" style="margin:0"><i style="width:'+pct+'%"></i></div>';
+    box.appendChild(d);
+  });
+}
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if(confirm('確定要清除全部練習紀錄嗎？清除後無法復原。')){
+    S.stats = JSON.parse(JSON.stringify(DEFAULTS.stats));
+    touchDay(); save(); renderProgress();
+  }
+});
+
+/* ============================================================
+   11. 設定
+   ============================================================ */
+function applyScale(){ document.documentElement.style.setProperty('--scale', S.scale); }
+applyScale();
+
+function segSetup(id, key, after){
+  const box = document.getElementById(id);
+  box.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-v]');
+    if(!b) return;
+    S[key] = (key === 'showZhuyin') ? Number(b.dataset.v) : parseFloat(b.dataset.v);
+    save(); markSeg(id, key);
+    if(after) after();
+  });
+}
+function markSeg(id, key){
+  document.querySelectorAll('#'+id+' button[data-v]').forEach(b => {
+    b.classList.toggle('sel', String(S[key]) === String(parseFloat(b.dataset.v)));
+  });
+}
+segSetup('segScale', 'scale', () => { applyScale(); });
+segSetup('segRate', 'rate', () => { say('這是現在的說話速度'); });
+segSetup('segZhuyin', 'showZhuyin', () => {
+  if(document.getElementById('s-learn').classList.contains('on')) renderLearn(false);
+});
+
+function renderSettings(){
+  markSeg('segScale','scale');
+  markSeg('segRate','rate');
+  markSeg('segZhuyin','showZhuyin');
+  renderVoiceUI();
+}
+function renderVoiceUI(){
+  const info = document.getElementById('voiceInfo');
+  const sel = document.getElementById('voiceSelect');
+  if(!info || !sel) return;
+  if(!('speechSynthesis' in window)){
+    info.textContent = '這台手機的瀏覽器不支援語音朗讀。建議改用 Chrome 或 Safari。';
+    sel.style.display = 'none';
+    return;
+  }
+  if(!TTS.voices.length){
+    info.textContent = '還沒抓到中文語音，請稍等一下，或重新整理頁面。';
+    sel.innerHTML = '';
+    return;
+  }
+  const tw = TTS.voice && /zh[-_]?TW|Hant/i.test(TTS.voice.lang + ' ' + TTS.voice.name);
+  info.textContent = tw
+    ? '目前使用台灣國語語音：' + TTS.voice.name
+    : '找不到台灣國語語音，先用「' + (TTS.voice ? TTS.voice.name : '預設') +
+      '」代替。安卓可到「設定 → 語言與輸入 → 文字轉語音」下載中文（台灣）語音。';
+  sel.innerHTML = '';
+  TTS.voices.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v.voiceURI;
+    o.textContent = v.name + '（' + v.lang + '）';
+    if(TTS.voice && v.voiceURI === TTS.voice.voiceURI) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+document.getElementById('voiceSelect').addEventListener('change', (e) => {
+  S.voiceURI = e.target.value; save();
+  TTS.voice = TTS.voices.find(v => v.voiceURI === S.voiceURI) || TTS.voice;
+  renderVoiceUI();
+  say('您好，今天天氣很好');
+});
+document.getElementById('testVoice').addEventListener('click', () => say('您好，今天天氣很好'));
+
+/* 說明框（由使用者自己按掉，不在點擊過程中改動版面） */
+if(S.hideNotice) document.getElementById('soundNotice').style.display = 'none';
+document.getElementById('noticeOk').addEventListener('click', () => {
+  S.hideNotice = 1; save();
+  document.getElementById('soundNotice').style.display = 'none';
+});
+
+/* 啟動 */
+show('home');
+</script>
+</body>
+</html>
